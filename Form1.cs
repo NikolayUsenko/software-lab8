@@ -6,38 +6,38 @@ namespace software_lab8
         {
             InitializeComponent();
 
-            MainTimer.Start();
-            this.Paint += Form1_Paint;
-
         }
 
-
-        Point pos = new Point(100, 100);
+        private Point location = new Point(50, 50);
         private int R = 50;
-        double T = 0;
+        Boolean DropStarted = false;
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics gr = e.Graphics;
-            gr.DrawEllipse(new Pen(Color.Blue, 10), pos.X - R, pos.Y - R, 2 * R, 2 * R);
+            gr.DrawEllipse(new Pen(Color.Red, 5), location.X - R, location.Y - R, R, R);
         }
 
-        private void MainTimer_Tick(object sender, EventArgs e)
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            T += 0.1;
-            pos.X = (int)(300 + 150 * Math.Sin(T));
-            pos.Y = (int)(300 + 100 * Math.Cos(T));
-            this.Invalidate();
+            int curX = e.X, curY = e.Y;
+            Boolean InX = (curX >= location.X - R && curX <= location.X + R);
+            Boolean InY = (curY >= location.Y - R && curY <= location.Y + R);
+
+            if (InX && InY)
+            {
+                DropStarted = true;
+            }
+
         }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-            MainTimer.Stop();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            if (DropStarted)
+            {
+                location.X = e.X + R / 2;
+                location.Y = e.Y + R / 2;
+                Invalidate();
+            }
         }
     }
 }
